@@ -25,7 +25,7 @@ export default function Register() {
       await register(name, email, phone, password)
       navigate('/')
     } catch (err) {
-      setError('Registration failed. Make sure the backend server is running.')
+      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.')
     } finally {
       setLoading(false)
     }

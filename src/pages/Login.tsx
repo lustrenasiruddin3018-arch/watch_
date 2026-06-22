@@ -18,7 +18,7 @@ export default function Login() {
       await login(email, password)
       navigate('/')
     } catch (err) {
-      setError('Login failed. Check your credentials and that the backend server is running.')
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.')
     } finally {
       setLoading(false)
     }

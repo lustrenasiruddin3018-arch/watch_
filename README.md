@@ -1,52 +1,37 @@
 # LUXTIME Watches
 
-A premium watch e-commerce site built with React 19, TypeScript, Vite, and Tailwind CSS, with an optional Express + MongoDB backend for authentication and orders.
+A premium watch e-commerce site built with React 19, TypeScript, Vite, and Tailwind CSS. Frontend-only — no server required.
 
 ## What's included
 
-**Frontend** (`/`)
 - Home page with auto-rotating hero slider, brands, categories, featured products
 - Watch listing with search, category/brand filters, sorting
 - Product detail page with image gallery + zoom, specs, reviews, warranty, manufacturer info, related products
 - Cart with quantity control, GST calculation, coupon code (`LUXTIME10` for 10% off)
 - Wishlist
-- Login / Register pages wired to the backend JWT API
+- Login / Register with local mock authentication (stored in `localStorage` — see note below)
 - Order tracking page with progress stages
 - Contact page with map embed and form
-- Privacy Policy, Terms, Cookie consent banner
+- Privacy Policy, Terms, cookie consent banner
 - Sticky responsive navbar, footer with newsletter signup
-
-**Backend** (`/backend`)
-- Express server with JWT auth (register/login), bcrypt password hashing
-- MongoDB/Mongoose models for User and Order
-- CORS configured for the Vite dev server
-
-> The frontend works fully on its own using mock product data in `src/data/products.ts`. The backend is only required for real login/register/order persistence — without it, Login/Register calls will fail gracefully with an error message.
 
 ## Setup
 
-### 1. Frontend
-
 ```bash
 npm install
-cp .env.example .env   # adjust VITE_API_URL if needed
 npm run dev
 ```
 
 Visit `http://localhost:5173`.
 
-### 2. Backend (optional, for auth + orders)
-
-Requires a MongoDB instance (local or Atlas).
-
 ```bash
-cd backend
-npm install
-cp .env.example .env   # set MONGO_URI and JWT_SECRET
-npm run dev
+npm run build      # production build to /dist
+npm run preview     # preview the production build locally
 ```
 
-The backend runs on `http://localhost:5000` by default.
+## Authentication note
+
+Login/Register in this project is a **local-only mock** for demo purposes (`src/context/AuthContext.tsx`). Accounts are stored in the browser's `localStorage`, with no real server, no password hashing, and no security guarantees. If you need real authentication, replace `AuthContext` with calls to your own backend (e.g. Express + JWT, Firebase Auth, Supabase, Auth0, etc.).
 
 ## Folder structure
 
@@ -57,20 +42,18 @@ src/
 ├── context/           CartContext, WishlistContext, AuthContext
 ├── data/              Mock product/brand/category data
 ├── types/             Shared TypeScript types
-├── utils/             api client, currency formatter
+├── utils/             currency formatter
 ├── App.tsx
 └── main.tsx
-backend/
-├── models/            User.js, Order.js
-├── routes/            auth.js, orders.js
-├── middleware/        auth.js (JWT guard)
-└── server.js
 ```
+
+## Deploying to Vercel
+
+This repo includes a `vercel.json` with SPA rewrites so client-side routes (e.g. `/watches`, `/product/:id`) work on refresh. Just connect the repo in Vercel — it auto-detects the Vite framework, build command, and output directory.
 
 ## Notes & next steps
 
 - Replace the placeholder images in `src/data/products.ts` with real product photography.
 - Add a payment gateway integration (Razorpay/Stripe) at checkout in `Cart.tsx`.
-- Wire `OrderTracking.tsx` to `GET /api/orders/:id` once you have real order IDs.
+- Add a real backend if you need persistent accounts, orders, or inventory management.
 - Add Redux Toolkit slices if you outgrow Context for cart/wishlist/auth state.
-- Add a `Product` collection + admin routes to the backend if you want to manage inventory dynamically instead of the static `products.ts` file.
